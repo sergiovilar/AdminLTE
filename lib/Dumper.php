@@ -32,19 +32,35 @@ class Dumper {
     public function getQueriesRaw($filters = []) {
         array_push($filters, "query[A]");
         $items = explode("\n", file_get_contents($this->getLogPath('/pihole.log')));
+        $filtered = [];
         $final = [];
         foreach($items as $item) {
-            $add = false;
+            $counter = 0;
+            $needed =  count($filters);
             foreach($filters as $filter) {
-                if(strpos($item, $filter) > -1) {
-                    $add = true;
-                } else {
-                    $add = false;
-                }
+                if(strpos($item, $filter) > -1) $counter++;
             }
-            if($add) array_push($final, $item);
+
+            if($counter == $needed) array_push($filtered, $item);
         }
-        return implode("\n", $final);
+
+        foreach($filtered as $item) {
+            $cols = [];
+            $arr = explode('dnsmasq', $item);
+            array_push($cols, trim($arr[0]));
+            $exploded = explode(' ', $arr[1]);
+            $c = 0;
+            foreach($exploded as $br) {
+                if($c > 0) array_push($cols, $br);
+                $c++;
+            }
+
+            array_push($final, $cols);
+
+
+        }
+
+        return $final;
     }
 
     public function getAds() {
