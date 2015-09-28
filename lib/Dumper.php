@@ -47,7 +47,11 @@ class Dumper {
         foreach($filtered as $item) {
             $cols = [];
             $arr = explode('dnsmasq', $item);
-            array_push($cols, trim($arr[0]));
+            $date = trim($arr[0]);
+
+            if(strpos($date, date('M d')) != 0) continue;
+
+            array_push($cols, $date);
             $exploded = explode(' ', $arr[1]);
             $c = 0;
             foreach($exploded as $br) {

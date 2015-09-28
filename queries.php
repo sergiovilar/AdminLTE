@@ -1,7 +1,7 @@
 <?php
 require "parts/header.php";
 require_once "lib/includes.php";
-$d = new Dumper("./var", "./var");
+$d = new Dumper();
 $filters = (!empty($_GET['filter'])) ? explode(',', $_GET['filter']) : [];
 $queries = $d->getQueriesRaw($filters);
 ?>
